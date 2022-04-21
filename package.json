@@ -4,15 +4,24 @@
   "description": "scaffolding tool for express / node",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint --ext .js .",
+    "prepare": "husky install"
   },
   "author": "Jairus San Juan",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^5.0.1",
-    "commander": "^9.2.0"
+    "chalk": "^4.1.2",
+    "commander": "^9.2.0",
+    "js-yaml": "^4.1.0"
   },
   "bin": {
     "express-scaffold": "app.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0",
+    "husky": "^7.0.4",
+    "prettier": "2.6.2"
   }
 }
