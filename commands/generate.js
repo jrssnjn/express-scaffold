@@ -1,11 +1,18 @@
 const fs = require('fs')
-/*eslint-disable */
 const chalk = require('chalk')
 const yaml = require('js-yaml')
+const Generator = require('../classes/Generator')
 
-function generate({ template }) {
-   let doc = yaml.load(fs.readFileSync(template, 'utf-8'))
-   console.log(doc)
+async function generate({ template }) {
+   try {
+      let doc = yaml.load(fs.readFileSync(template, 'utf-8'))
+      let { routes, controllers } = doc
+      let gen = new Generator({ routes, controllers })
+
+      await gen.generate()
+   } catch (error) {
+      console.log(chalk.red(error))
+   }
 }
 
 module.exports = generate

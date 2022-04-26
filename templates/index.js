@@ -17,10 +17,10 @@ let routeFile = function (HTTPMethods) {
 
    HTTPMethods.forEach(method => {
       if (allowedMethods.includes(method.toLowerCase()))
-         methodsUsed += `.${method.toLowerCase()}((req,res,next)=>{\n   res.status(200).end()\n}))\n`
+         methodsUsed += `.${method.toLowerCase()}((req,res,next)=>{\n   res.status(200).end()\n})\n`
    })
 
-   let content = `const express = require('express')\nconst router = express.Router()\nrouter.route('/')\n${methodsUsed ? methodsUsed : ''}\nmodule.exports = router`
+   let content = `const express = require('express')\nconst router = express.Router()\n\nrouter.route('/')\n${methodsUsed ? methodsUsed : ''}\nmodule.exports = router`
 
    return content
 }
