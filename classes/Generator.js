@@ -1,28 +1,10 @@
 /* eslint-disable */
 
-const { writeFile } = require('fs')
+const { writeFile, access, mkdir, constants } = require('fs')
 const process = require('process')
-const { entryFile } = require('../templates/index')
+const { entryFile, routeFile } = require('../templates/index')
 
 const dir = process.cwd()
-
-function write(filePath, value) {
-   return new Promise((resolve, reject) => {
-      writeFile(
-         filePath,
-         value,
-         {
-            encoding: 'utf-8',
-            flag: 'w',
-         },
-         err => {
-            if (err) reject(err)
-
-            resolve()
-         }
-      )
-   })
-}
 
 class Generator {
    constructor({ routes, controllers }) {
@@ -35,7 +17,47 @@ class Generator {
    }
 
    checkControllers() {
-      if (!this.controllers) throw 'Template file - Controllers Property not found.'
+      if (!this.controllers)
+         throw 'Template file - Controllers Property not found.'
+   }
+
+   write(filePath, value) {
+      return new Promise((resolve, reject) => {
+         writeFile(
+            filePath,
+            value,
+            {
+               encoding: 'utf-8',
+               flag: 'w',
+            },
+            err => {
+               if (err) reject(err)
+
+               resolve()
+            }
+         )
+      })
+   }
+
+   checkFolderIfExist(path) {
+      return new Promise((resolve, reject) => {
+         access(path, constants.R_OK | constants.W_OK, err => {
+            // err = folder does not exist, so we resolve false.
+            if (err) resolve(false)
+
+            reject('Express Scaffold - Routes folder already exists.')
+         })
+      })
+   }
+
+   createFolders(path) {
+      return new Promise((resolve, reject) => {
+         mkdir(path, err => {
+            if (err) reject(err)
+
+            resolve()
+         })
+      })
    }
 
    async generateBase() {
@@ -44,19 +66,36 @@ class Generator {
 
          let content = entryFile(this.routes)
 
-         let path = dir + '/sample.js'
+         let path = `${dir}/index.js`
 
-         await write(path, content)
+         await this.write(path, content)
       } catch (error) {
          throw error
       }
    }
 
-   async generateRoutes() {}
+   async generateRoutes() {
+      try {
+         this.checkRoutes()
+         let exists = await this.checkFolderIfExist(`${dir}/routes`)
+         if (!exists) await this.createFolders(`${dir}/routes`)
+
+         Object.keys(this.routes).forEach(async route => {
+            let content = routeFile(this.routes[route])
+            let path = `${dir}/routes/${route}.js`
+
+            await this.write(path, content)
+         })
+      } catch (error) {
+         throw error
+      }
+   }
 
    async generateControllers() {}
 
-   async generate() {}
+   async generate() {
+      await Promise.allSettled([this.generateBase(), this.generateRoutes()])
+   }
 }
 
 module.exports = Generator
