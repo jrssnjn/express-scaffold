@@ -2,12 +2,18 @@ let entryFile = function (routes) {
    let usedRoutes = ''
 
    Object.keys(routes).forEach(route => {
-      usedRoutes += `app.use('/${route}', require('./routes/${route}Routes'))\n`
+      usedRoutes += `app.use('/${route}', require('./routes/${route}'))\n`
    })
 
-   let content = `const express = require('express')\nconst app = express()\nconst PORT = process.env.PORT || 3000\n\n${usedRoutes ? usedRoutes : ''}\napp.listen(PORT, () => console.log('Server started'))`
+   let template = [
+      "const express = require('express')",
+      'const app = express()',
+      'const PORT = process.env.PORT || 3000\n',
+      usedRoutes,
+      "app.listen(PORT, () => console.log('Server started'))",
+   ]
 
-   return content
+   return template.join('\n')
 }
 
 let routeFile = function (HTTPMethods) {
@@ -20,9 +26,15 @@ let routeFile = function (HTTPMethods) {
          methodsUsed += `.${method.toLowerCase()}((req,res,next)=>{\n   res.status(200).end()\n})\n`
    })
 
-   let content = `const express = require('express')\nconst router = express.Router()\n\nrouter.route('/')\n${methodsUsed ? methodsUsed : ''}\nmodule.exports = router`
+   let template = [
+      "const express = require('express')",
+      'const router = express.Router()\n',
+      "router.route('/')",
+      methodsUsed,
+      'module.exports = router',
+   ]
 
-   return content
+   return template.join('\n')
 }
 
 module.exports = {

@@ -1,6 +1,8 @@
 const { writeFile, access, mkdir, constants } = require('fs')
-const process = require('process')
 const { entryFile, routeFile } = require('../templates/index')
+const process = require('process')
+const chalk = require('chalk')
+const log = console.log
 
 const dir = process.cwd()
 
@@ -75,7 +77,7 @@ class Generator {
 
          await this.write(path, content)
       } catch (error) {
-         throw error
+         log(chalk.red(error))
       }
    }
 
@@ -94,7 +96,7 @@ class Generator {
             await this.write(path, content)
          })
       } catch (error) {
-         throw error
+         log(chalk.red(error))
       }
    }
 
