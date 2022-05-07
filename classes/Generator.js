@@ -1,8 +1,8 @@
-/* eslint-disable */
-
 const { writeFile, access, mkdir, constants } = require('fs')
-const process = require('process')
 const { entryFile, routeFile } = require('../templates/index')
+const process = require('process')
+const chalk = require('chalk')
+const log = console.log
 
 const dir = process.cwd()
 
@@ -60,6 +60,13 @@ class Generator {
       })
    }
 
+   makeDirectory(path) {
+      return Promise.all([
+         this.checkFolderIfExist(path),
+         this.createFolders(path),
+      ])
+   }
+
    async generateBase() {
       try {
          this.checkRoutes()
@@ -70,31 +77,33 @@ class Generator {
 
          await this.write(path, content)
       } catch (error) {
-         throw error
+         log(chalk.red(error))
       }
    }
 
    async generateRoutes() {
       try {
          this.checkRoutes()
-         let exists = await this.checkFolderIfExist(`${dir}/routes`)
-         if (!exists) await this.createFolders(`${dir}/routes`)
+
+         let basePath = `${dir}/routes`
+
+         await this.makeDirectory(basePath)
 
          Object.keys(this.routes).forEach(async route => {
             let content = routeFile(this.routes[route])
-            let path = `${dir}/routes/${route}.js`
+            let path = `${basePath}/${route}.js`
 
             await this.write(path, content)
          })
       } catch (error) {
-         throw error
+         log(chalk.red(error))
       }
    }
 
    async generateControllers() {}
 
    async generate() {
-      await Promise.allSettled([this.generateBase(), this.generateRoutes()])
+      await Promise.all([this.generateBase(), this.generateRoutes()])
    }
 }
 
