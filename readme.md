@@ -30,9 +30,6 @@ express-scaffold generate -h
 
 ./node_modules/@jrssnjn/express-scaffold/app.js -h
 ./node_modules/@jrssnjn/express-scaffold/app.js generate -h
-
-// returns 'phenomenon'
-foobar.singularize('phenomena')
 ```
 
 ## Template File Format
