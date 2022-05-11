@@ -37,7 +37,27 @@ let routeFile = function (HTTPMethods) {
    return template.join('\n')
 }
 
+let packageFile = function (data) {
+   let { name, version, description, author } = data
+
+   let content = `{
+      "name": "${name}",
+      "version": "${version}",
+      "description": "${description}",
+      "main": "app.js",
+      "scripts": {
+         "start": "node index.js",
+         "test": "echo 'Error: no test specified' && exit 1",
+      },
+      "author": "${author}",
+      "license": "ISC"
+   }`
+
+   return content
+}
+
 module.exports = {
    entryFile,
    routeFile,
+   packageFile,
 }
