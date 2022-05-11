@@ -46,7 +46,9 @@ class Generator {
             // err = folder does not exist, so we resolve false.
             if (err) resolve(false)
 
-            reject('Express Scaffold - Routes folder already exists.')
+            reject(
+               'Express Scaffold - Routes folder already exists, values will be overriden'
+            )
          })
       })
    }
@@ -65,7 +67,7 @@ class Generator {
       return Promise.all([
          this.checkFolderIfExist(path),
          this.createFolders(path),
-      ])
+      ]).catch(error => log(chalk.red(error)))
    }
 
    async generateBase() {

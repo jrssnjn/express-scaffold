@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "npx eslint --ext .js .",
     "prepare": "husky install"
   },
@@ -22,6 +22,7 @@
   "devDependencies": {
     "eslint": "^8.13.0",
     "husky": "^7.0.4",
+    "jest": "^28.1.0",
     "prettier": "2.6.2"
   }
 }
