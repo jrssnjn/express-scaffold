@@ -1,5 +1,5 @@
 const { writeFile, access, mkdir, constants } = require('fs')
-const { entryFile, routeFile } = require('../templates/index')
+const { entryFile, routeFile, packageFile } = require('../templates/index')
 const process = require('process')
 const chalk = require('chalk')
 const log = console.log
@@ -7,9 +7,10 @@ const log = console.log
 const dir = process.cwd()
 
 class Generator {
-   constructor({ routes, controllers }) {
+   constructor({ routes, controllers, app }) {
       this.routes = routes
       this.controllers = controllers
+      this.app = app
    }
 
    checkRoutes() {
@@ -102,8 +103,28 @@ class Generator {
 
    async generateControllers() {}
 
+   async generatePackageJSONFile() {
+      try {
+         let path = `${dir}/package.json`
+
+         await this.write(path, packageFile({ ...this.app }))
+      } catch (error) {
+         log(chalk.red(error))
+      }
+   }
+
    async generate() {
-      await Promise.all([this.generateBase(), this.generateRoutes()])
+      // intended to run sequentially to avoid missing files upon error.
+
+      await this.generatePackageJSONFile()
+      await this.generateRoutes()
+      await this.generateBase()
+
+      log(
+         chalk.green(
+            'Succesfully generated index.js, package.json, and route files.'
+         )
+      )
    }
 }
 

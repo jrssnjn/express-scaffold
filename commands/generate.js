@@ -4,8 +4,8 @@ const Generator = require('../classes/Generator')
 
 async function generate({ template }) {
    let doc = yaml.load(fs.readFileSync(template, 'utf-8'))
-   let { routes, controllers } = doc
-   let gen = new Generator({ routes, controllers })
+   let { routes, controllers, app } = doc
+   let gen = new Generator({ routes, controllers, app })
 
    await gen.generate()
 }
