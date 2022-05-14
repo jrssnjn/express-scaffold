@@ -16,4 +16,14 @@ let saveDependencies = function run_npm_install(
    })
 }
 
-module.exports = { saveDependencies }
+let formatFiles = function formatFiles() {
+   return new Promise((resolve, reject) => {
+      exec(`prettier --trailing-comma es5 --tab-width 3 --semi false --single-quote true --arrow-parens avoid --bracket-spacing true --write routes/* index.js`, error => {
+         if (error) reject(error)
+
+         resolve()
+      })
+   })
+}
+
+module.exports = { saveDependencies, formatFiles }

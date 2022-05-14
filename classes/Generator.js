@@ -1,6 +1,6 @@
 const { writeFile, access, mkdir, constants } = require('fs')
 const { entryFile, routeFile, packageFile } = require('../templates/index')
-const { saveDependencies } = require('../utils/child_process')
+const { saveDependencies, formatFiles } = require('../utils/child_process')
 const process = require('process')
 const chalk = require('chalk')
 const log = console.log
@@ -123,6 +123,7 @@ class Generator {
       await this.generateRoutes()
       await this.generateBase()
       await saveDependencies(['express'], false)
+      await formatFiles()
 
       log(
          chalk.green(
