@@ -47,6 +47,19 @@ app:
   version: '1.0.0'
 ```
 
+## Result
+
+```
+current-folder
+├─ routes             
+│  ├─ auth.js         
+│  └─ user.js         
+├─ index.js           
+├─ package-lock.json  
+└─ package.json
+
+```       
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
