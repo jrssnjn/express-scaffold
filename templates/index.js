@@ -23,13 +23,13 @@ let routeFile = function (HTTPMethods) {
 
    HTTPMethods.forEach(method => {
       if (allowedMethods.includes(method.toLowerCase()))
-         methodsUsed += `.${method.toLowerCase()}((req,res,next)=>{\n   res.status(200).end()\n})\n`
+         methodsUsed += `  .${method.toLowerCase()}((req, res, next) => {\n\t\tres.status(200).end()\n  })\n`
    })
 
    let template = [
       "const express = require('express')",
       'const router = express.Router()\n',
-      "router.route('/')",
+      `router\n  .route('/')`,
       methodsUsed,
       'module.exports = router',
    ]
